@@ -2,6 +2,9 @@
   "name": "minagine-cli",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": {
+    "minagine": "./index.js"
+  },
   "license": "MIT",
   "private": true,
   "dependencies": {
