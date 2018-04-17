@@ -5,9 +5,9 @@
 $ yarn
 ```
 
-## Unstall
+## Install
 ```
-$ npm link
+$ npm run setup
 ```
 
 Now you can use `minagine` command on your terminal.
