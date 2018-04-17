@@ -24,7 +24,9 @@ const companyDomain = email.match(/\w+([-.]\w+)*\.\w+([-.]\w+)*$/)[0];
     // start work
     await page.click("#button0");
     console.log("good morning");
-  } else if (process.argv[4] === 1) {
+  }
+
+  if (process.argv[4] === "1") {
     // go home
     await page.click("#button1");
     console.log("see you again");
