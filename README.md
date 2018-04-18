@@ -1,9 +1,18 @@
 # minagine-cli
 
-## setup
+## Setup
+```
+$ yarn
+```
 
-`$ yarn`
+## Install
+```
+$ npm run setup
+```
 
-## usage
+Now you can use `minagine` command on your terminal.
 
-`$ node index.js USERID PASSWORD [01]`
+## Usage
+```
+$ minagine USERID PASSWORD [01]
+```
