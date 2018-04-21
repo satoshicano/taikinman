@@ -1,14 +1,23 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const puppeteer = require("puppeteer");
+const Configstore = require("configstore");
+const Puppeteer = require("puppeteer");
+const PkgInfo = require("./package.json");
 
-const email = process.argv[2];
-const password = process.argv[3];
+const credential = new Configstore(PkgInfo.name, {}, { globalConfigPath: true })
+
+if (!credential.has("email") || !credential.has("password")) {
+  console.error("Need to edit credential file.")
+  console.log(`Set 'email' and 'password' in config file located at ${credential.path}`)
+  process.exit(1)
+}
+
+const email = credential.get("email");
+const password = credential.get("password");
 const companyDomain = email.match(/\w+([-.]\w+)*\.\w+([-.]\w+)*$/)[0];
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await Puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto("https://minagine.awg.co.jp/hcm/user/login");
@@ -20,13 +29,13 @@ const companyDomain = email.match(/\w+([-.]\w+)*\.\w+([-.]\w+)*$/)[0];
 
   await page.waitFor(5000);
 
-  if (process.argv[4] === "0") {
+  if (process.argv[2] === "work") {
     // start work
     await page.click("#button0");
     console.log("good morning");
   }
 
-  if (process.argv[4] === "1") {
+  if (process.argv[2] === "home") {
     // go home
     await page.click("#button1");
     console.log("see you again");
