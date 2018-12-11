@@ -1,17 +1,31 @@
 {
   "name": "taikinman",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "setup": "npm link --ignore-scripts"
-  },
-  "bin": {
-    "minagine": "./index.js"
-  },
+  "main": "src/index.ts",
   "license": "MIT",
   "private": true,
+  "contributors": [{
+    "email": "satoshicano@gmail.com",
+    "name": "satoshicano",
+    "url": "https://cano.work"
+  }],
+  "scripts": {
+    "start": "ts-node --project ./tsconfig.json src/index.ts"
+  },
   "dependencies": {
-    "configstore": "^3.1.2",
-    "puppeteer": "^1.3.0"
+    "@slack/client": "^4.8.0",
+    "@types/configstore": "^4.0.0",
+    "@types/puppeteer": "1.11.1",
+    "configstore": "^4.0.0",
+    "node-nfcpy-id": "^0.1.1",
+    "puppeteer": "1.11.0",
+    "ts-node": "7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.15.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-plugin-prettier": "^2.0.1"
   }
 }

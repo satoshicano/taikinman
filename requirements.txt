@@ -1,0 +1,6 @@
+libusb1==1.6.6
+ndeflib==0.3.2
+nfcpy==0.13.5
+nfcpy-id-reader==0.1.0
+pyDes==2.0.1
+pyserial==3.4
