@@ -1,26 +1,24 @@
-# minagine-cli
+# taikinman
+
+## Requirement
+
+- Node.js
+- Yarn
+- Python 2.7
 
 ## Setup
+
 ```
 $ yarn
+$ pip install -r requirements.txt
 ```
-
-## Install
-```
-$ npm run setup
-```
-
-Now you can use `minagine` command on your terminal.
 
 ## Usage
+
 Need to edit your login credential possibly located under `~/.config/taikinman/config.json` before using taikinman.
 
-### Start working
-```
-$ minagine work
-```
+### Start
 
-### Going home
 ```
-$ minagine home
+$ yarn start
 ```
