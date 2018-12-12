@@ -8,7 +8,12 @@
     "email": "satoshicano@gmail.com",
     "name": "satoshicano",
     "url": "https://cano.work"
-  }],
+  },
+  {
+    "name": "IzumiSy",
+    "url": "http://izumisy-tech.hatenablog.com"
+  }
+],
   "scripts": {
     "start": "ts-node --project ./tsconfig.json src/index.ts"
   },
