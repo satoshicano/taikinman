@@ -4,10 +4,14 @@ import * as fs from "fs";
 
 const credential = new Configstore("taikinman", {}, { globalConfigPath: true });
 
-if (!credential.has("slackToken") || !credential.has("conversationId")) {
+if (
+  !credential.has("slackToken") ||
+  !credential.has("conversationId") ||
+  !credential.has("message")
+) {
   console.error("Need to edit credential file.");
   console.log(
-    `Set 'slackToken' and 'conversationId' in config file located at ${
+    `Set 'slackToken', 'conversationId', 'message' in config file located at ${
       credential.path
     }`
   );
@@ -16,6 +20,7 @@ if (!credential.has("slackToken") || !credential.has("conversationId")) {
 
 const token = credential.get("slackToken");
 const conversationId = credential.get("conversationId");
+const message = credential.get("message");
 
 export const sendResultToSlack = () => {
   const web = new WebClient(token);
@@ -33,6 +38,6 @@ export const sendAlertToSlack = (id: number) => {
   const web = new WebClient(token);
   web.chat.postMessage({
     channel: conversationId,
-    text: `誰かが勤怠押そうとしてます id: ${id}`
+    text: `${message} id: ${id}`
   });
 };
