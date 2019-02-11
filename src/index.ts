@@ -1,50 +1,49 @@
-import NfcpyId from "node-nfcpy-id";
-import * as Configstore from "configstore";
-import { doSomethingInMinagine } from "./minagine";
-import { sendResultToSlack, sendAlertToSlack } from "./slack";
-import * as Sentry from "@sentry/node";
+import { google } from "googleapis";
+import { loginAndScreenshot } from "./puppeteerClient";
+import { sendResultToSlack } from "./slackClient";
 
-const credential = new Configstore("taikinman", {}, { globalConfigPath: true });
+// const message = process.env.MESSAGE;
+const BUCKET = process.env.BUCKET;
 
-if (
-  !credential.has("slackToken") ||
-  !credential.has("conversationId") ||
-  !credential.has("sentryDsn")
-) {
-  console.error("Need to edit credential file.");
-  console.log(
-    `Set 'slackToken', 'conversationId', 'sentryDsn' in config file located at ${
-      credential.path
-    }`
-  );
-  process.exit(1);
-}
-
-Sentry.init({
-  dsn: credential.get("sentryDsn")
-});
-
-const nfc = new NfcpyId();
-const uid = credential.get("uid");
-nfc.start();
-
-nfc.on("touchstart", card => {
-  const now = new Date();
-  if (card.id === uid) {
-    if (now.getHours() < 15) {
-      // start work
-      console.log("touchstart", "id:", card.id, "type:", card.type);
-      doSomethingInMinagine("work")
-        .then(sendResultToSlack)
-        .catch(console.error);
-    } else {
-      // go home
-      console.log("touchstart", "id:", card.id, "type:", card.type);
-      doSomethingInMinagine("home")
-        .then(sendResultToSlack)
-        .catch(console.error);
-    }
-  } else {
-    sendAlertToSlack(card.id);
+const getAccessToken = (header: any) => {
+  if (!header) {
+    return null;
   }
-});
+
+  const match = header.match(/^Bearer\s+([^\s]+)$/);
+  return match ? match[1] : null;
+};
+
+const authorized = async (req: any, res: any) => {
+  await loginAndScreenshot(req, res);
+  sendResultToSlack();
+  res.send("success");
+};
+
+exports.echo = async (req: any, res: any) => {
+  const accessToken = getAccessToken(req.get("Authorization"));
+  console.log("accessTOken", accessToken);
+  const oauth = new google.auth.OAuth2();
+  oauth.setCredentials({ access_token: accessToken });
+
+  const permission = "storage.buckets.get";
+  const gcs = google.storage("v1");
+  await gcs.buckets.testIamPermissions(
+    { bucket: BUCKET, permissions: [permission], auth: oauth },
+    {},
+    async (err, response) => {
+      if (err) {
+        console.error(err);
+      }
+      if (
+        response !== null &&
+        response !== undefined &&
+        response.data.permissions.includes(permission)
+      ) {
+        await authorized(req, res);
+      } else {
+        res.status(403).send("It is an invalid account.");
+      }
+    }
+  );
+};

@@ -1,26 +1,19 @@
 import * as puppeteer from "puppeteer";
-import * as Configstore from "configstore";
 
-const credential = new Configstore("taikinman", {}, { globalConfigPath: true });
-
-if (!credential.has("email") || !credential.has("password")) {
-  console.error("Need to edit credential file.");
-  console.log(
-    `Set 'email' and 'password' in config file located at ${credential.path}`
-  );
-  process.exit(1);
-}
-
-const EMAIL = credential.get("email");
-const PASSWORD = credential.get("password");
+const EMAIL = process.env.EMAIL;
+const PASSWORD = process.env.PASSWORD;
 const COMPANY_DOMAIN = EMAIL.split("@")[1];
-
 const LOGIN_URL = "https://tm.minagine.net/index.html";
 
-export async function doSomethingInMinagine(cmd: "home" | "work") {
+export const loginAndScreenshot = async (req: any, res: any) => {
+  const cmd: "work" | "home" = req.query.cmd;
+
+  if (!cmd) {
+    return res.send('params["cmd"] is blank');
+  }
+
   const browser = await puppeteer.launch({
-    headless: false,
-    executablePath: "/usr/bin/chromium-browser"
+    headless: false
   });
   const page = await browser.newPage();
   page.setViewport({
@@ -61,6 +54,5 @@ export async function doSomethingInMinagine(cmd: "home" | "work") {
   });
 
   await page.screenshot({ clip, path: "result.png" });
-
   await browser.close();
-}
+};

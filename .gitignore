@@ -3,3 +3,5 @@ package-lock.json*
 *.png
 yarn-error.log
 develop
+*token.json
+index.js
